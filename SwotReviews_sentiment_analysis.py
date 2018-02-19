@@ -175,34 +175,34 @@ if __name__ == "__main__":
     #print(text)
    # text = """Went to Pizza Hut(North Nazimabad) with family and had the worst service ever. We sat there for approx 10 mins waiting for someone to give us the menu and then when we finally got the menu, there's no one to take our menu. We didn't even get forks and knives until we asked for them. Pizza Hut should hire more TRAINED staff members to provide a satisfactory service to their customers."""
 
-    splitter = Splitter()
-    postagger = POSTagger()
-    dicttagger = DictionaryTagger([ 'dicts/positive.yml', 'dicts/negative.yml', 
-                                    'dicts/inc.yml', 'dicts/dec.yml', 'dicts/inv.yml'])
+        splitter = Splitter()
+        postagger = POSTagger()
+        dicttagger = DictionaryTagger([ 'dicts/positive.yml', 'dicts/negative.yml', 
+                                        'dicts/inc.yml', 'dicts/dec.yml', 'dicts/inv.yml'])
 
-    splitted_sentences = splitter.split(text)
-    pprint(splitted_sentences)
+        splitted_sentences = splitter.split(text)
+        pprint(splitted_sentences)
 
-    pos_tagged_sentences = postagger.pos_tag(splitted_sentences)
-    pprint(pos_tagged_sentences)
+        pos_tagged_sentences = postagger.pos_tag(splitted_sentences)
+        pprint(pos_tagged_sentences)
 
-    dict_tagged_sentences = dicttagger.tag(pos_tagged_sentences)
-    pprint(dict_tagged_sentences)
+        dict_tagged_sentences = dicttagger.tag(pos_tagged_sentences)
+        pprint(dict_tagged_sentences)
 
-#Scores= negative or positive?
-    print("analyzing sentiment...")
-    score = sentiment_score(dict_tagged_sentences)
-    print(score) #yeh cheez usi file mei print hojaye
+    #Scores= negative or positive?
+        print("analyzing sentiment...")
+        score = sentiment_score(dict_tagged_sentences)
+        print(score) #yeh cheez usi file mei print hojaye
 
-    #Rating
-    if score == 1.0:
-        print("4 Stars")
-    elif score > 1.0:
-        print("5 Stars")
-    elif score == -1.0:
-        print("2 Stars")
-    elif score < -1.0:
-        print("1 Star")
-    else:
-        print("3 Stars")
+        #Rating
+        if score == 1.0:
+            print("4 Stars")
+        elif score > 1.0:
+            print("5 Stars")
+        elif score == -1.0:
+            print("2 Stars")
+        elif score < -1.0:
+            print("1 Star")
+        else:
+            print("3 Stars")
 
