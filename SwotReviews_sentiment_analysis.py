@@ -211,7 +211,7 @@ if __name__ == "__main__":
         elif score < -1.0:
             print("1 Star")
             score.append("1 Star")
-        else:
+        elif score == 0.0:
             print("3 Stars")
             score.append("3 Stars")
     temp['text'] =texts
