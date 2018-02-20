@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 SWOTReviews_sentiment_analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,6 +10,7 @@ In case of positive sentiments, It will give 4 stars for 1.0 and 5 for > 1.0
 In case of Negatice sentiments, It will give 2 stars for -1.0 and 1 for < -1.0 i.e: -2.0 or less
 In case of Neutral sentiments, It will give 3 stars for 0.0
 Rating will be shown at the end of sentiment analysis
+
 """
 
 from pprint import pprint
@@ -21,8 +23,8 @@ import sys
 import os
 import re
 
-
 class Splitter(object):
+
     def __init__(self):
         self.nltk_splitter = nltk.data.load('tokenizers/punkt/english.pickle')
         self.nltk_tokenizer = nltk.tokenize.TreebankWordTokenizer()
@@ -39,9 +41,10 @@ class Splitter(object):
 
 
 class POSTagger(object):
+
     def __init__(self):
         pass
-
+        
     def pos_tag(self, sentences):
         """
         input format: list of lists of words
@@ -53,12 +56,12 @@ class POSTagger(object):
         """
 
         pos = [nltk.pos_tag(sentence) for sentence in sentences]
-        # adapt format
+        #adapt format
         pos = [[(word, word, [postag]) for (word, postag) in sentence] for sentence in pos]
         return pos
 
-
 class DictionaryTagger(object):
+
     def __init__(self, dictionary_paths):
         files = [open(path, 'r') for path in dictionary_paths]
         dictionaries = [yaml.load(dict_file) for dict_file in files]
@@ -89,7 +92,7 @@ class DictionaryTagger(object):
             self.max_key_size = N
         i = 0
         while (i < N):
-            j = min(i + self.max_key_size, N)  # avoid overflow
+            j = min(i + self.max_key_size, N) #avoid overflow
             tagged = False
             while (j > i):
                 expression_form = ' '.join([word[0] for word in sentence[i:j]]).lower()
@@ -99,13 +102,13 @@ class DictionaryTagger(object):
                 else:
                     literal = expression_form
                 if literal in self.dictionary:
-                    # self.logger.debug("found: %s" % literal)
+                    #self.logger.debug("found: %s" % literal)
                     is_single_token = j - i == 1
                     original_position = i
                     i = j
                     taggings = [tag for tag in self.dictionary[literal]]
                     tagged_expression = (expression_form, expression_lemma, taggings)
-                    if is_single_token:  # if the tagged literal is a single token, conserve its previous taggings:
+                    if is_single_token: #if the tagged literal is a single token, conserve its previous taggings:
                         original_token_tagging = sentence[original_position][2]
                         tagged_expression[2].extend(original_token_tagging)
                     tag_sentence.append(tagged_expression)
@@ -117,14 +120,12 @@ class DictionaryTagger(object):
                 i += 1
         return tag_sentence
 
-
 def value_of(sentiment):
     if sentiment == 'positive': return 1
     if sentiment == 'negative': return -1
     return 0
 
-
-def sentence_score(sentence_tokens, previous_token, acum_score):
+def sentence_score(sentence_tokens, previous_token, acum_score):    
     if not sentence_tokens:
         return acum_score
     else:
@@ -141,13 +142,11 @@ def sentence_score(sentence_tokens, previous_token, acum_score):
                 token_score *= -1.0
         return sentence_score(sentence_tokens[1:], current_token, acum_score + token_score)
 
-
 def sentiment_score(review):
     return sum([sentence_score(sentence, None, 0.0) for sentence in review])
 
-
 if __name__ == "__main__":
-    # trying to take input from txt or csv file
+    #trying to take input from txt or csv file
     """
     text = open('foodreviews.csv', 'r')
     reader = csv.reader(text)
@@ -158,14 +157,15 @@ if __name__ == "__main__":
             new_rows_list.append(new_row)
             #text=text
             text.close()
+
     userinput = input('Enter the filname:')
     myfile= open(userinput)
     text= myfile.readline()
     print (text)
     myfile.close()
 """
-    #    df1 = pd.read_csv("foodreviews.csv")
-    #   print(df1)
+#    df1 = pd.read_csv("foodreviews.csv")
+ #   print(df1)
     df1 = pd.read_csv("foodreviews.csv")
     temp = pd.DataFrame()
     score = []
@@ -174,14 +174,14 @@ if __name__ == "__main__":
         print(i)
         text = i
         print(text)
-        # text= input("Enter the food review: ") #yahan se input lega file se
-        # print(text)
-        # text = """Went to Pizza Hut(North Nazimabad) with family and had the worst service ever. We sat there for approx 10 mins waiting for someone to give us the menu and then when we finally got the menu, there's no one to take our menu. We didn't even get forks and knives until we asked for them. Pizza Hut should hire more TRAINED staff members to provide a satisfactory service to their customers."""
+    #text= input("Enter the food review: ") #yahan se input lega file se
+    #print(text)
+   # text = """Went to Pizza Hut(North Nazimabad) with family and had the worst service ever. We sat there for approx 10 mins waiting for someone to give us the menu and then when we finally got the menu, there's no one to take our menu. We didn't even get forks and knives until we asked for them. Pizza Hut should hire more TRAINED staff members to provide a satisfactory service to their customers."""
 
         splitter = Splitter()
         postagger = POSTagger()
-        dicttagger = DictionaryTagger(['dicts/positive.yml', 'dicts/negative.yml',
-                                       'dicts/inc.yml', 'dicts/dec.yml', 'dicts/inv.yml'])
+        dicttagger = DictionaryTagger([ 'dicts/positive.yml', 'dicts/negative.yml', 
+                                        'dicts/inc.yml', 'dicts/dec.yml', 'dicts/inv.yml'])
 
         splitted_sentences = splitter.split(text)
         pprint(splitted_sentences)
@@ -192,12 +192,12 @@ if __name__ == "__main__":
         dict_tagged_sentences = dicttagger.tag(pos_tagged_sentences)
         pprint(dict_tagged_sentences)
 
-        # Scores= negative or positive?
+    #Scores= negative or positive?
         print("analyzing sentiment...")
         score = sentiment_score(dict_tagged_sentences)
-        print(score)  # yeh cheez usi file mei print hojaye
+        print(score) #yeh cheez usi file mei print hojaye
 
-        # Rating
+        #Rating
         texts.append(text)
         if score == 1.0:
             print("4 Stars")
@@ -211,9 +211,9 @@ if __name__ == "__main__":
         elif score < -1.0:
             print("1 Star")
             score.append("1 Star")
-        elif score == 0:
+        else:
             print("3 Stars")
             score.append("3 Stars")
-    temp['text'] = texts
+    temp['text'] =texts
     temp['scores'] = score
     temp.to_csv("results.csv")
