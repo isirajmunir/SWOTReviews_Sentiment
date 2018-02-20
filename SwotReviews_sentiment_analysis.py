@@ -167,6 +167,9 @@ if __name__ == "__main__":
 #    df1 = pd.read_csv("foodreviews.csv")
  #   print(df1)
     df1 = pd.read_csv("foodreviews.csv")
+    temp = pd.DataFrame()
+    score = []
+    texts = []
     for i in df1['sentence']:
         print(i)
         text = i
@@ -195,14 +198,22 @@ if __name__ == "__main__":
         print(score) #yeh cheez usi file mei print hojaye
 
         #Rating
+        texts.append(text)
         if score == 1.0:
             print("4 Stars")
+            score.append("4 Stars")
         elif score > 1.0:
             print("5 Stars")
+            score.append("5 Stars")
         elif score == -1.0:
             print("2 Stars")
+            score.append("2 Stars")
         elif score < -1.0:
             print("1 Star")
+            score.append("1 Star")
         else:
             print("3 Stars")
-
+            score.append("3 Stars")
+    temp['text'] =texts
+    temp['scores'] = score
+    temp.to_csv("results.csv")
