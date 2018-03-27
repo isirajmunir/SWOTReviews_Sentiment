@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 """
 SWOTReviews_sentiment_analysis
+FYP-II
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Name: Siraj Munir
+Modifier Name: Siraj Munir
 Program that show user sentiments while giving reviews for different restuarants (Mgative or Positive).
 Positive= 1.0 | >1.0
 Negative= -1.0 | < -1.0
 In case of positive sentiments, It will give 4 stars for 1.0 and 5 for > 1.0
 In case of Negatice sentiments, It will give 2 stars for -1.0 and 1 for < -1.0 i.e: -2.0 or less
 In case of Neutral sentiments, It will give 3 stars for 0.0
-Rating will be shown at the end of sentiment analysis
+Rating will be shown at the end of sentiment analysis and it will stored in file.
 
+The steps we've followed are:
+
+Split the text into sentences, and each sentence into tokens
+Add POS (Part Of Speech) tags to the Splitted text, using NLTK
+Enrich the POS-tagged text with our own tags using dictionaries. These tags are in a different "semantic level" than POS-tags: "positive", "negative", "inverter", "incrementer" and "decrementer"
+Implement some basic extraction rules over the tagged text, in form of python functions
 """
 
 from pprint import pprint
@@ -22,7 +29,7 @@ import csv
 import sys
 import os
 import re
-
+#Prepocessing the Text
 class Splitter(object):
 
     def __init__(self):
@@ -60,6 +67,7 @@ class POSTagger(object):
         pos = [[(word, word, [postag]) for (word, postag) in sentence] for sentence in pos]
         return pos
 
+#Tagging the text with dictionaries
 class DictionaryTagger(object):
 
     def __init__(self, dictionary_paths):
@@ -166,9 +174,10 @@ if __name__ == "__main__":
 """
 #    df1 = pd.read_csv("foodreviews.csv")
  #   print(df1)
-    df1 = pd.read_csv("foodreviews.csv")
+ #reading file with Pandas Library
+    df1 = pd.read_csv("foodreviews1.csv")
     temp = pd.DataFrame()
-    score = []
+    scores = []
     texts = []
     for i in df1['sentence']:
         print(i)
@@ -201,19 +210,20 @@ if __name__ == "__main__":
         texts.append(text)
         if score == 1.0:
             print("4 Stars")
-            score.append("4 Stars")
+            scores.append("4 Stars")
         elif score > 1.0:
             print("5 Stars")
-            score.append("5 Stars")
+            scores.append("5 Stars")
         elif score == -1.0:
             print("2 Stars")
-            score.append("2 Stars")
+            scores.append("2 Stars")
         elif score < -1.0:
             print("1 Star")
-            score.append("1 Star")
-        elif score == 0.0:
+            scores.append("1 Star")
+        else:
             print("3 Stars")
-            score.append("3 Stars")
+            scores.append("3 Stars")
     temp['text'] =texts
-    temp['scores'] = score
+    temp['scores'] = scores
     temp.to_csv("results.csv")
+
